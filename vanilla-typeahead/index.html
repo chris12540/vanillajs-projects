@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Typeahead</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Typeahead</title>
 </head>
 
 <body>
-    <style>
-        html,
+	<style>
+		html,
         body {
             margin: 0;
             padding: 0;
@@ -73,17 +73,39 @@
         }
     </style>
 
-    <div class="container">
-        <h1>Try Typing...</h1>
-        <div class="input-container">
-            <input type="text">
-            <ul id="list"></ul>
-        </div>
-    </div>
+	<div class="container">
+		<h1>Try Typing...</h1>
+		<div class="input-container">
+			<input type="text">
+			<ul id="list"></ul>
+		</div>
+	</div>
 
+	<script type="text/javascript">
+		let characters = []
+		fetch('https://swapi.co/api/people')
+			.then(response => {
+				return response.json();
+			}).then(data => {
+				characters = data.results;
+				render(characters, "");
+			})
+
+		function render(arr, filterText) {
+			const list = document.getElementById('list');
+
+			const filtered = arr.filter(c => c.name.toLowerCase().match(filterText.toLowerCase()));
+
+			list.innerHTML = filtered.map(char => "<li>" + char.name + "</li>").join('')
+		}
+
+		const input = document.querySelector('input')
+		input.addEventListener('keyup', function (event) {
+			console.log(event.target.value);
+			render(characters, event.target.value)
+		})
+	</script>
 </body>
 
-<script>
-</script>
 
 </html>
